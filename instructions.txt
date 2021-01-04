@@ -1,0 +1,8 @@
+1. create react app
+2. git init
+3. truffle init
+4. First file to start is truffle-config.js
+    - add dependencies here.
+    - Make new files; .babelrc , .env
+    - configure truffle to move contracts to src
+    
