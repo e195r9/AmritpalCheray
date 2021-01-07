@@ -17,7 +17,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
     const name = 'Learn Token'
     const symbol = 'LEARN'
     const decimals = '18';
-    const totalSupply = tokens(1000000);
+    const totalSupply = tokens(1000000).toString();
 
     //runs before each it
     beforeEach(async () => {
