@@ -32,6 +32,7 @@ contract Exchange{
 
     //EVENTS
     event Deposit(address token, address user, uint256 amount, uint256 balance);
+    event Withdraw(address token, address user, uint256 amount, uint256 balance);
 
     constructor (address _feeAccount, uint256 _feePercent) {
         //set fee account
@@ -52,6 +53,14 @@ contract Exchange{
 
     }
 
+    function withdrawEther(uint _amount) public {
+        require(tokens[ETHER][msg.sender] >= _amount); //the user holds enough balance to withdraw
+        tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
+        payable(msg.sender).transfer(_amount);
+        emit Withdraw(ETHER, msg.sender, _amount,  tokens[ETHER][msg.sender]);
+
+    }
+
     function depositToken(address _token, uint256 _amount) public {
         //Don't allow ether deposits
         require(_token != ETHER);
@@ -65,5 +74,18 @@ contract Exchange{
 
         //emit event to tell customer of response
         emit Deposit(_token, msg.sender, _amount,  tokens[_token][msg.sender]);
+    }
+
+    function withdrawToken(address _token, uint256 _amount) public {
+        require(_token != ETHER);
+        require(tokens[_token][msg.sender] >= _amount);
+        require(Token(_token).transfer(msg.sender, _amount)); //require that the tokens get transferred back to the user
+        tokens[_token][msg.sender]  = tokens[_token][msg.sender].sub(_amount);
+        //emit the withdraw event
+        emit Withdraw(_token, msg.sender, _amount,  tokens[_token][msg.sender]);
+    }
+    function balanceOf(address _token, address _user) public view returns(uint256){
+        return tokens[_token][_user];
+        
     }
 }
